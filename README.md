@@ -22,3 +22,10 @@ this is a simple books shop app using django framework and django rest framework
 ### Database Diagram
 
 [Database Diagram](https://drive.google.com/file/d/1Z_pSXmooiBsASVsFBJWELs2C-IpCD7bk/view?usp=sharing)
+
+## Enpoints
+
+| Method | Enpoint | Function |
+|--------|--------|--------|
+| POST | add/genre/ | AddGenre |
+| POST | add/author/ | AddAuthor |
