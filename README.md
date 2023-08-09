@@ -29,3 +29,4 @@ this is a simple books shop app using django framework and django rest framework
 |--------|--------|--------|
 | POST | add/genre/ | AddGenre |
 | POST | add/author/ | AddAuthor |
+| POST | add/publisher/ | AddPublisher |
