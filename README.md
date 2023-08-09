@@ -27,6 +27,7 @@ this is a simple books shop app using django framework and django rest framework
 
 | Method | Enpoint | Function |
 |--------|--------|--------|
-| POST | add/genre/ | AddGenre |
-| POST | add/author/ | AddAuthor |
-| POST | add/publisher/ | AddPublisher |
+| POST | add/genre/ | GenreView |
+| POST | add/author/ | AuthorView |
+| POST | add/publisher/ | PublisherView |
+| POST | add/language/ | LanguageView |
