@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from django.http import HttpRequest,JsonResponse,FileResponse
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -11,6 +13,9 @@ from .serializers.genre_serializers import GenreSerializer
 from .serializers.publisher_serializers import PublisherSerializer
 from .serializers.language_serializers import LanguageSerializer
 from .serializers.book_serializers import BookSerializer
+from .serializers.bookimage_serializers import BookImageSerializer
+
+from .models import BookImage,Book
 
 class GenreView(APIView):
     def post(self, request):
@@ -56,3 +61,13 @@ class BookView(APIView):
             serializer.save()
             return Response({'Status': 'Created'}, status=status.HTTP_201_CREATED)
         return Response({'Status': 'Bad Request'},status=status.HTTP_400_BAD_REQUEST)
+
+class BookImageView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request):
+        data = request.data
+        serializer = BookImageSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'Status':'Created'},status=status.HTTP_201_CREATED)
+        return Response({'Status':'Bad Request'},status=status.HTTP_400_BAD_REQUEST)
