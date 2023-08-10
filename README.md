@@ -32,3 +32,4 @@ this is a simple books shop app using django framework and django rest framework
 | POST | add/publisher/ | PublisherView |
 | POST | add/language/ | LanguageView |
 | POST | add/book/ | BookView |
+| POST | user/sign_in/ | UserView |
