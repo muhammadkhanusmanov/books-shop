@@ -22,7 +22,10 @@ from .serializers.bookimage_serializers import BookImageSerializer
 from .models import BookImage,Book
 
 class GenreView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
     def post(self, request):
+        print(request.user)
         data = request.data
         serializer = GenreSerializer(data=data)
         if serializer.is_valid():
@@ -30,7 +33,10 @@ class GenreView(APIView):
             return Response({'Status': 'Created'}, status=status.HTTP_201_CREATED)
         return Response({'Status': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class AuthorView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
     def post(self, request):
         data = request.data
         serializer = AuthorSerializer(data=data)
@@ -40,6 +46,8 @@ class AuthorView(APIView):
         return Response({'Status': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
 
 class PublisherView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
     def post(self,request):
         data = request.data
         serializer = PublisherSerializer(data=data)
@@ -49,9 +57,10 @@ class PublisherView(APIView):
         return Response({'Status': 'Bad Request'},status=status.HTTP_400_BAD_REQUEST)
 
 class LanguageView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
     def post(self,request:Request):
         data = request.data
-        print(request)
         serializer = LanguageSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -59,6 +68,8 @@ class LanguageView(APIView):
         return Response({'Status': 'Bad Request'},status=status.HTTP_400_BAD_REQUEST)
 
 class BookView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
     def post(self, request):
         data = request.data
         serializer = BookSerializer(data=data)
@@ -68,6 +79,8 @@ class BookView(APIView):
         return Response({'Status': 'Bad Request'},status=status.HTTP_400_BAD_REQUEST)
 
 class BookImageView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
     parser_classes = (MultiPartParser, FormParser)
     def post(self, request):
         data = request.data
@@ -97,9 +110,10 @@ class UserView(APIView):
                 token = Token.objects.create(user=user)
                 return Response({'Status':'created','Token':token.key},status=status.HTTP_201_CREATED)
         return Response({'Status':'BAD_REQUEST'},status=status.HTTP_400_BAD_REQUEST)
+    authentication_classes = [BasicAuthentication]
     def put(self,request):
-        permission_classes = [IsAuthenticated]
         user = request.user
+        print(user)
         try:
             token = Token.objects.get(user = user)
             return Response({'Status': 'OK','Token': token.key},status=status.HTTP_200_OK)
