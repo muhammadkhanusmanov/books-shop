@@ -7,6 +7,10 @@ from django.http import HttpRequest,JsonResponse,FileResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+
+
 
 from .serializers.author_serializers import AuthorSerializer
 from .serializers.genre_serializers import GenreSerializer
@@ -45,8 +49,9 @@ class PublisherView(APIView):
         return Response({'Status': 'Bad Request'},status=status.HTTP_400_BAD_REQUEST)
 
 class LanguageView(APIView):
-    def post(self,request):
+    def post(self,request:Request):
         data = request.data
+        print(request)
         serializer = LanguageSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -92,3 +97,11 @@ class UserView(APIView):
                 token = Token.objects.create(user=user)
                 return Response({'Status':'created','Token':token.key},status=status.HTTP_201_CREATED)
         return Response({'Status':'BAD_REQUEST'},status=status.HTTP_400_BAD_REQUEST)
+    def put(self,request):
+        permission_classes = [IsAuthenticated]
+        user = request.user
+        try:
+            token = Token.objects.get(user = user)
+            return Response({'Status': 'OK','Token': token.key},status=status.HTTP_200_OK)
+        except:
+            return Response({'Status': 'User not found', 'Token':None},status=status.HTTP_404_NOT_FOUND)
