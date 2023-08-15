@@ -19,13 +19,12 @@ from .serializers.language_serializers import LanguageSerializer
 from .serializers.book_serializers import BookSerializer
 from .serializers.bookimage_serializers import BookImageSerializer
 
-from .models import BookImage,Book
+from .models import BookImage,Book,Genre,Author,Language,Publisher
 
 class GenreView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAdminUser]
     def post(self, request):
-        print(request.user)
         data = request.data
         serializer = GenreSerializer(data=data)
         if serializer.is_valid():
@@ -119,3 +118,60 @@ class UserView(APIView):
             return Response({'Status': 'OK','Token': token.key},status=status.HTTP_200_OK)
         except:
             return Response({'Status': 'User not found', 'Token':None},status=status.HTTP_404_NOT_FOUND)
+
+
+
+class GetGenreView(APIView):
+    def get(self, request):
+        genres = Genre.objects.all()
+        genres = GenreSerializer(genres,many=True)
+        return Response(genres.data)
+
+class GetAuthorView(APIView):
+    def get(self, request):
+        authors = Author.objects.all()
+        authors = AuthorSerializer(authors,many=True)
+        return Response(authors.data)
+
+class GetLanguageView(APIView):
+    def get(self, request):
+        languages = Language.objects.all()
+        languages = LanguageSerializer(languages,many=True)
+        return Response(languages.data)
+
+class GetPublisherView(APIView):
+    def get(self, request):
+        publishers = Publisher.objects.all()
+        publishers = PublisherSerializer(publishers,many=True)
+        return Response(publishers.data)
+
+class GetBookView(APIView):
+    def get(self, request):
+        books = Book.objects.all()
+        books = BookSerializer(books,many=True)
+        return Response(books.data)
+    def post(self, request):
+        data = request.data
+        title = data.get('title', False)
+        books_list = []
+        if title:
+            books = Book.objects.filter(title__icontains=title)
+            for book in books:
+                img = BookImage.objects.get(book=book)
+                img_url = img.image.url
+                book1 = BookSerializer(book).data
+                book1['img'] = img_url
+                books_list.append(book1)
+            return Response(books_list)
+
+        
+
+class GetImageView(APIView):
+    def get(self, request):
+        images = BookImage.objects.all()
+        images = BookImageSerializer(images,many=True).data
+        image_list = []
+        for image in images:
+            image['img_url'] = image.image_url
+            image_list.append(image)
+        return Response(image_list)
