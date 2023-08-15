@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-njt$2n2r*vy0ul*6-poey_!ur4w0z9v2w%%x8(h(et@)(vrvoo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['webbookshop.pythonanywhere.com']
 
 
 # Application definition
@@ -101,7 +101,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+REST_FRAMEWORK = {
+    # ...
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    # ...
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
