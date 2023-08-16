@@ -169,9 +169,9 @@ class GetBookView(APIView):
 class GetImageView(APIView):
     def get(self, request):
         images = BookImage.objects.all()
-        images = BookImageSerializer(images,many=True).data
         image_list = []
         for image in images:
-            image['img_url'] = image.image_url
-            image_list.append(image)
+            data = BookImageSerializer(image).data
+            data['img_url'] = image.url
+            image_list.append(data)
         return Response(image_list)
