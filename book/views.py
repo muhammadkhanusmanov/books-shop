@@ -172,6 +172,6 @@ class GetImageView(APIView):
         image_list = []
         for image in images:
             data = BookImageSerializer(image).data
-            data['img_url'] ='https://www.pythonanywhere.com/user/webbookshop/files/home/webbookshop' + image.url
+            data['img_url'] ='https://www.pythonanywhere.com/user/webbookshop/files/home/webbookshop' + image.image.url
             image_list.append(data)
         return Response(image_list)
