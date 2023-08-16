@@ -5,7 +5,8 @@ from ..views import (
     GetBookView,
     GetImageView,
     GetLanguageView,
-    GetPublisherView
+    GetPublisherView,
+    SaveView
     )
 urlpatterns = [
     path('genres/',GetGenreView.as_view()),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('images/',GetImageView.as_view()),
     path('languages/',GetLanguageView.as_view()),
     path('publishers/',GetPublisherView.as_view()),
+    path('img/<int:id>',SaveView.as_view()),
 ]
