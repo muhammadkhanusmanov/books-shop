@@ -114,10 +114,21 @@ class UserView(APIView):
         user = request.user
         print(user)
         try:
-            token = Token.objects.get(user = user)
+            token,created = Token.objects.get_or_create(user = user)
             return Response({'Status': 'OK','Token': token.key},status=status.HTTP_200_OK)
         except:
             return Response({'Status': 'User not found', 'Token':None},status=status.HTTP_404_NOT_FOUND)
+
+class LogOut(APIView):
+    authentication_classes = [TokenAuthentication]
+    def post(self, request):
+        user = request.user
+        try:
+            token = Token.objects.get(user=user)
+            token.delete()
+            return Response({'Status': 'Deleted token'},status=status.HTTP_200_OK)
+        except:
+            return Response({'Status': 'Bad request'},status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -158,9 +169,8 @@ class GetBookView(APIView):
             books = Book.objects.filter(title__icontains=title)
             for book in books:
                 img = BookImage.objects.get(book=book)
-                img_url = img.image.url
                 book1 = BookSerializer(book).data
-                book1['img'] ='https://www.pythonanywhere.com/user/webbookshop/files/home/webbookshop' + img_url
+                book1['img'] =f'https://www.pythonanywhere.com/get/img/{img.id}'
                 books_list.append(book1)
             return Response(books_list)
 
@@ -175,6 +185,7 @@ class GetImageView(APIView):
             data['img_url'] =f'https://www.pythonanywhere.com/get/img/{image.id}'
             image_list.append(data)
         return Response(image_list)
+        
 
 class SaveView(APIView):
     def get(self, request,id:int):
