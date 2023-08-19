@@ -5,7 +5,7 @@ from ..views import (
     PublisherView,
     LanguageView,
     BookView,
-    BookImageView
+    BookImageView,
 )
 
 urlpatterns = [
