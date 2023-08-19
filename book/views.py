@@ -174,7 +174,30 @@ class GetBookView(APIView):
                 books_list.append(book1)
             return Response(books_list)
 
-        
+class BookView(APIView):
+    def get(self, request,id:str):
+        try:
+            book = Book.objects.get(id=id)
+            result = BookSerializer(book).data
+            img = BookImage.objects.get(book=book)
+            result['img_url'] = f'https://www.pythonanywhere.com/get/img/{img.id}'
+            return Response(result)
+        except:
+            return Response({'Status':'Not Found'}, status=status.HTTP_404_NOT_FOUND)
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+    def post(self,request,id:str):
+        data = request.data
+        try:
+            book = Book.objects.get(id=id)
+            serializer = BookSerializer(book, data = data, partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"Status":"Updated"},status=status.HTTP_200_OK)
+            return Response({"Status":"No validation"},status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"Status":"No validation"},status=status.HTTP_400_BAD_REQUEST)
+
 
 class GetImageView(APIView):
     def get(self, request):

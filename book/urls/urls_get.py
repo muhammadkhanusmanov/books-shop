@@ -6,7 +6,7 @@ from ..views import (
     GetImageView,
     GetLanguageView,
     GetPublisherView,
-    SaveView
+    SaveView,
     )
 urlpatterns = [
     path('genres/',GetGenreView.as_view()),

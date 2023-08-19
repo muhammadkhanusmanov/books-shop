@@ -6,4 +6,5 @@ urlpatterns = [
     path('add/', include('book.urls.url_add')),
     path('user/',include('book.urls.user_urls')),
     path('get/', include('book.urls.urls_get')),
+    path('book/', include('book.urls.book_url')),
 ]
