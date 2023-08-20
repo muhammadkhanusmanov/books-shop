@@ -137,24 +137,52 @@ class GetGenreView(APIView):
         genres = Genre.objects.all()
         genres = GenreSerializer(genres,many=True)
         return Response(genres.data)
+    def put(self, request, id: int):
+        try:
+            genre = Genre.objects.get(id=id)
+            serializer = GenreSerializer(data=genre)
+            return Response(serializer.data)
+        except:
+            return Response({'Status':'Genre not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GetAuthorView(APIView):
     def get(self, request):
         authors = Author.objects.all()
         authors = AuthorSerializer(authors,many=True)
         return Response(authors.data)
+    def put(self, request, id: int):
+        try:
+            author = Author.objects.get(id=id)
+            serializer = AuthorSerializer(data=author)
+            return (serializer.data)
+        except:
+            return Response({'Status':'Author not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GetLanguageView(APIView):
     def get(self, request):
         languages = Language.objects.all()
         languages = LanguageSerializer(languages,many=True)
         return Response(languages.data)
+    def put(self, request, id:int):
+        try:
+            language = Language.objects.get(id=id)
+            serializer = LanguageSerializer(data=language)
+            return Response(serializer.data)
+        except:
+            return Response({'Status':'Language not found'},status=status.HTTP_404_NOT_FOUND)
 
 class GetPublisherView(APIView):
     def get(self, request):
         publishers = Publisher.objects.all()
         publishers = PublisherSerializer(publishers,many=True)
         return Response(publishers.data)
+    def put(self, request, id: int):
+        try:
+            publisher = Publisher.objects.get(id=id)
+            serializer = PublisherSerializer(data = publisher)
+            return Response(serializer.data)
+        except:
+            return Response({'Status':'Publisher not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GetBookView(APIView):
     def get(self, request):
@@ -173,6 +201,15 @@ class GetBookView(APIView):
                 book1['img'] =f'https://www.pythonanywhere.com/get/img/{img.id}'
                 books_list.append(book1)
             return Response(books_list)
+        return Response({'Status':'title is required'},status=status.HTTP_400_BAD_REQUEST)
+    def put(self,request,id:int):
+        try:
+            book = Book.objects.get(id=id)
+            srializer = BookSerializer(data=book)
+            return Response(srializer.data)
+        except:
+            return Response({'Status':'Book not found'},status=status.HTTP_404_NOT_FOUND)
+        
 
 class BookView(APIView):
     def get(self, request,id:str):

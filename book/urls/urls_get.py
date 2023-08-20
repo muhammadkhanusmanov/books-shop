@@ -16,4 +16,8 @@ urlpatterns = [
     path('languages/',GetLanguageView.as_view()),
     path('publishers/',GetPublisherView.as_view()),
     path('img/<int:id>',SaveView.as_view()),
+    path('genre/<int:id>',GetGenreView.as_view()),
+    path('author/<int:id>',GetAuthorView.as_view()),
+    path('language/<int:id>',GetLanguageView.as_view()),
+    path('book/<int:id>',GetBookView.as_view()),
 ]
