@@ -185,6 +185,18 @@ class GetPublisherView(APIView):
             return Response({'Status':'Publisher not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GetBookView(APIView):
+    """
+        Get a book by id
+    """
+    def put(self, request,id:str):
+        try:
+            book = Book.objects.get(id=id)
+            result = BookSerializer(book).data
+            img = BookImage.objects.get(book=book)
+            result['img_url'] = f'https://www.pythonanywhere.com/get/img/{img.id}'
+            return Response(result)
+        except:
+            return Response({'Status':'Not Found'}, status=status.HTTP_404_NOT_FOUND)
     def get(self, request):
         books = Book.objects.all()
         books = BookSerializer(books,many=True)
@@ -202,25 +214,12 @@ class GetBookView(APIView):
                 books_list.append(book1)
             return Response(books_list)
         return Response({'Status':'title is required'},status=status.HTTP_400_BAD_REQUEST)
-    def put(self,request,id:int):
-        try:
-            book = Book.objects.get(id=id)
-            srializer = BookSerializer(data=book)
-            return Response(srializer.data)
-        except:
-            return Response({'Status':'Book not found'},status=status.HTTP_404_NOT_FOUND)
-        
+
 
 class BookView(APIView):
-    def get(self, request,id:str):
-        try:
-            book = Book.objects.get(id=id)
-            result = BookSerializer(book).data
-            img = BookImage.objects.get(book=book)
-            result['img_url'] = f'https://www.pythonanywhere.com/get/img/{img.id}'
-            return Response(result)
-        except:
-            return Response({'Status':'Not Found'}, status=status.HTTP_404_NOT_FOUND)
+    """
+        Update a book by id
+    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAdminUser]
     def post(self,request,id:str):
@@ -234,6 +233,19 @@ class BookView(APIView):
             return Response({"Status":"No validation"},status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({"Status":"No validation"},status=status.HTTP_400_BAD_REQUEST)
+    
+    """
+        Delete a book by id
+    """
+    def delete(self,request,id:str):
+        try:
+            book = Book.objects.get(id=id)
+            img = BookImage.objects.get(book=book)
+            book.delete()
+            img.delete()
+            return Response({"Status":"Deleted"},status=status.HTTP_200_OK)
+        except:
+            return Response({"Status":"Not found"},status=status.HTTP_404_NOT_FOUND)
 
 
 class GetImageView(APIView):
@@ -245,7 +257,7 @@ class GetImageView(APIView):
             data['img_url'] =f'https://www.pythonanywhere.com/get/img/{image.id}'
             image_list.append(data)
         return Response(image_list)
-        
+
 
 class SaveView(APIView):
     def get(self, request,id:int):
