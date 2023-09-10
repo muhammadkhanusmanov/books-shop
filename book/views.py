@@ -199,8 +199,15 @@ class GetBookView(APIView):
             return Response({'Status':'Not Found'}, status=status.HTTP_404_NOT_FOUND)
     def get(self, request):
         books = Book.objects.all()
-        books = BookSerializer(books,many=True)
-        return Response(books.data)
+        result = []
+        i=0
+        for book in books:  
+            img = BookImage.objects.get(book=book)
+            book = BookSerializer(book).data
+            result.append(book)
+            result[i]['img_url'] = f'https://www.pythonanywhere.com/get/img/{img.id}'
+            i+=1
+        return Response(result,status=status.HTTP_200_OK)
     def post(self, request):
         data = request.data
         title = data.get('title', False)
