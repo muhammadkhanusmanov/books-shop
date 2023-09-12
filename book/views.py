@@ -112,7 +112,6 @@ class UserView(APIView):
     authentication_classes = [BasicAuthentication]
     def put(self,request):
         user = request.user
-        print(user)
         try:
             token,created = Token.objects.get_or_create(user = user)
             return Response({'Status': 'OK','Token': token.key},status=status.HTTP_200_OK)
@@ -273,3 +272,9 @@ class SaveView(APIView):
         image = open(img.path,'rb')
         response = FileResponse(image)
         return response
+
+class CheckAdminView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAdminUser]
+    def post(self,request):
+        return Response({'success':True},status=status.HTTP_200_OK)
