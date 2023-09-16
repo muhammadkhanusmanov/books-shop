@@ -277,4 +277,5 @@ class CheckAdminView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAdminUser]
     def post(self,request):
-        return Response({'success':True},status=status.HTTP_200_OK)
+        token = Token.objects.get(user=request.user)
+        return Response({'success':True,'token':token.key},status=status.HTTP_200_OK)
